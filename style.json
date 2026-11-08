@@ -1,0 +1,18 @@
+{
+ "id": "ps1",
+ "name": "PS1 / PS2 nostalgic",
+ "about": "Late PS1 / early PS2: a low-res frame, crisp nearest-filtered photo texels, 15-bit dither, tape wear; the old nostalgic finish for Nintendo/PS1/PS2-era asks.",
+ "version": 1,
+ "engine": 1,
+ "terrain": {
+  "res": 240,
+  "sat": 0.7,
+  "vhs": 0.6,
+  "dither": true
+ },
+ "characters": "ps1char: a photo cut-out turned into a ~450-triangle rigged body with 128 px PS1 faces (CHARACTERS.md, tools/ps1char/)",
+ "surfaces": "designTex on CC0 photos, read as blocky nearest low-res texels (terrain.retro, src/scenario/retrotex.js)",
+ "light": "real sources, terrain.lightModel 'real'; path-traced at 256 samples to judge",
+ "finish": "terrain.finish, the old nostalgic tape finish (src/scenario/finish.js)",
+ "rules": "RULES.md"
+}

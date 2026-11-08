@@ -1,0 +1,31 @@
+---
+name: ps2-body-research
+description: "optional PS2 body generator — ring-tube v1 read as a mannequin; research (2026-10-03) points to MakeHuman proxy741 (CC0) + baked targets, bendy-straw shoulders, oversized hands/feet, clothes as shells"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 2c83346d-a955-4794-ac5f-664806b0f03f
+  modified: 2026-10-03T21:02:10.005Z
+---
+
+Optional PS2 body (`bodyGen: 'ps2'`, src/ps2body.js, uncommitted as of 2026-10-03): v1 = hand-laid ring tubes raycast onto the SDF sculpt. User: "right track-ish… still kinda bad" (pole neck, tube limbs, flat shoulders, tiny mitten hands, no anatomy) → asked for /obscura research.
+
+Findings that matter:
+- **MakeHuman assets are CC0 since Sept 2020** (base mesh hm08, proxies, targets, CC0 "01" clothing packs; community packs 02+ are often CC-BY — check each). `proxy741` = 741 verts / 730 quads (~1460 tris), UV'd; male1591/female1605 ~3.1k tris. Targets (macrodetails, measure, torso, stomach, armslegs) are sparse vertex offsets on hm08, bakeable onto a proxy via its .proxy refs: p = Σwᵢ·B[rᵢ] + scaled offset. All JS ports (makehuman-js) are AGPL → reimplement from CC0 data. MB-Lab data is AGPL. Quaternius moved to a custom license (QAL) — avoid. Downloads cached in the session scratchpad (p/, x/, base.obj).
+- **Real PS2 numbers:** GTA SA ped 1,200 tris (head 30%, hands+shoes 22%), lead 2,000, 256x256 8-bit; MGS2 Snake 3,800; FFX ~3,000. Hands/feet ~10% oversized; neck a short stub hidden by the collar; shoulder line drops ~22°. Low poly uses the **"bendy straw" shoulder** (arm tube straight into the torso + one separating ring), elbow/knee = 3 rings hard-weighted; hands = paddle + thumb (~60 tris); shoe = tapered box ~70 tris; clothes are separate open shells with an overhanging hem lip; textures carry folds (CLUT 8-bit).
+- GTA SA CJ clothes: ~1 model : 4 textures, each with fat/normal/muscle blend versions.
+
+**Outcome (2026-10-03):** ring tubes → proxy741 ("low poly silly") → male1591 (~3.1k tris) + MakeHuman's CC0 garments as real geometry, cut to ~1.5k tris with 512 px photo textures (male_elegantsuit01 for 'suit'): user "yes this is much better". Target is **PS2 quality with GMod-style weirdness** — not GMod realism, not low-poly. Body+garments ≈ 4.6k tris. Garments baked by tools/makehuman/bake.mjs (mhclo = proxy format + delete_verts → hideBody).
+
+**How to apply:** prefer an artist-made CC0 template (proxy741) deformed onto our skeleton and morphs over procedural rings. Related: [[clothes-first-bias]], [[body-personality]], [[cc0-only-assets]].
+
+
+**2026-10-05, boxed body:** the old 'boxy' (rig.js boxify: the sculpt squared after the fact) read as triangular shards, since squaring moved vertices onto a square outline but left the SDF mesh's random triangles and no corner edges. Replaced by a third generator `bodyGen: 'box'` (src/boxbody.js): one closed box per bone, four corners a ring, sized by walking the character's own SDF out from the bone axis (asymmetric: belly forward), hard weights, overlapping caps at joints, paddle hands, feet as boxes on y = 0; the chest is clamped to shoulder width (measured at shoulder height it ran out along the T-posed arm). UI: the boxy and PS2 checkboxes became one `#bodyGen` select (sculpted / boxed / PS2); `bodyShape` is gone from the schema.
+
+
+**2026-10-05, real proportions pass (user: "legs are nice, rest is horrible"):** measured on a front render: head 1/6.8 of height (real 1/7.5), neck 0.065 (real 0.04), shoulders 1.9 head widths (real 2.5), arms 0.37 (real 0.34), legs right (they are MakeHuman's own). Fixes in the PS2 generator: torso widened across to our shoulder joints (ps2body.js widenTorso, hips 0 → neck full), hats scale/move with headScale (HEADFIT measured at 1.1), PS2 head anchor neckLen x0.3, skull neck stub stops at the jaw for the PS2 body (headsculpt.js; the body's own neck runs into the head), a chin shadow baked down the neck (bodybake.js, skin above collarY), skinMatch default 0.75, pose 'rest' (arms down). Real-looking values: headScale 0.75, neckLen 0.35, shoulderW 3.0, armLen 0.92, handSize 0.85, pose rest. Lesson: three "the neck is pale" guesses were wrong (face tone, colour match, hull); the vertical pixel profile showed the shadow was already there and the pale band was the garment's collar plus the lit neck base. Measure the render column before changing shaders.
+
+
+**2026-10-05, the neck (user: "extremely wrong" x3):** final design in ps2body.js: MakeHuman's mesh is cut keeping only faces wholly below neck_01 + 0.3 dm; a 10-sided tube covers the rim: base ring from the rim (fitted through MakeHuman), middle and top rings re-laid in OUR space after fitting (middle: a real neck, 0.24*sqrt(girth), between Neck and Head joints; top: flare 1.4*(headScale/1.1)^0.7, at Head + 0.2*hs up, 0.1*hs forward, inside the hull). Failures on the way, each measured: half-faces above the cut (ragged rim); a tube wound inside-out (dark flat wall); squeezing MakeHuman's head into a column (lip/chin lumps + seams); rings fitted through MakeHuman's neck landed ~0.2 off-centre under a small lowered head (a bucket); the neck caught the shoulder widening (neck bone removed from widenTorso); a shelf where the tube met the hull's underside (fixed by the flare). Skull stub for the PS2 body: chin − 0.08 only.
+
+**2026-10-05, template head (src/templatehead.js, user: "quite close to what I want"):** after /obscura research (FaceGen, Headshot: fit a whole template head, project the photo into its UVs, fade to skin, seam at the neck base), the PS2 body keeps MakeHuman's own head (eye/mouth holes filled), fits it to the photo head by bounding boxes (per-axis scale, chin anchor), snaps front vertices onto the photo face along -z, bakes the face atlas over the toned skin tile into the head's UVs; photo face/mouth/eye meshes are not drawn (headGen 'photo' keeps the old mask). A follow-up that placed the head by eye/mouth holes instead (to stop it sinking onto collars) was rejected: "so much worse, the faces don't work" → reverted. Open: the head sinks onto the collar on some outfits (the photo hull hangs ~0.44 below the chin), no hair, no eye/mouth animation. Editor now loads character textures as NoColorSpace (glTF's sRGB flag made every character dark red in the lit look).
