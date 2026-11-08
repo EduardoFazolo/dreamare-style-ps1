@@ -5,7 +5,7 @@ metadata:
   type: project
 ---
 
-SUPERSEDED 2026-10-29 by [[ps1-character-look]] (tools/ps1char) for new people; sheet3d is kept only for characters already built with it.
+SUPERSEDED 2026-10-29 by [[ps1-character-look]] (ps1char, itself deprecated 2026-11-08 for ps1BodyV3, tools/ps1bodyv3) for new people; sheet3d is kept only for characters already built with it.
 
 The user's breakthrough character method (2026-10-26). The RE4 apron woman was first built by hand in art/re-villager/; the user then asked for a fully programmatic version that works for any aesthetic, body type or person.
 

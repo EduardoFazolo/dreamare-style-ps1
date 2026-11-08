@@ -10,7 +10,7 @@
   "vhs": 0.6,
   "dither": true
  },
- "characters": "ps1char: a photo cut-out turned into a ~450-triangle rigged body with 128 px PS1 faces (CHARACTERS.md, tools/ps1char/)",
+ "characters": "ps1BodyV3: a photo cut-out turned into a rigged low-poly body, the photo face mapped on an 800-triangle head, a short wide neck, mouths swapped on the voice (CHARACTERS.md, tools/ps1bodyv3/; ps1char is deprecated)",
  "surfaces": "designTex on CC0 photos, read as blocky nearest low-res texels (terrain.retro, src/scenario/retrotex.js)",
  "light": "real sources, terrain.lightModel 'real'; path-traced at 256 samples to judge",
  "finish": "terrain.finish, the old nostalgic tape finish (src/scenario/finish.js)",

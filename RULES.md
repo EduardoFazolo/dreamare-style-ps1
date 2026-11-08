@@ -16,5 +16,5 @@ How scenes in this style look. Only for projects and scenes that use it (`node t
 
 ## Characters
 
-- New people and creatures are ps1char: read `CHARACTERS.md` before making or editing any body or face.
+- New people and creatures are ps1BodyV3 (`tools/ps1bodyv3/`, ids `v3-<id>`): a photo face on a low-poly head, a short wide neck, mouths swapped as textures on the voice's syllables. The old ps1char is deprecated. Read `CHARACTERS.md` before making or editing any body or face.
 - Faces keep the PS1 texture look (few colours, chunky texels) whatever else changes: colours first, then pixels.
